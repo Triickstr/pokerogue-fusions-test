@@ -1,91 +1,111 @@
+// main.js for Fusion Calculator
+
+// Initialize on page load
 document.addEventListener("DOMContentLoaded", () => {
-    const baseSelect = new TomSelect("#basePokemon", { maxOptions: null });
-    const secondarySelect = new TomSelect("#secondaryPokemon", { maxOptions: null });
-
-    populatePokemonDropdown(baseSelect);
-    populatePokemonDropdown(secondarySelect);
-
-    baseSelect.on("change", updateFusionDisplay);
-    secondarySelect.on("change", updateFusionDisplay);
+    initSelectors();
 });
 
-function populatePokemonDropdown(selectInstance) {
-    const options = pokemonData.map((p, i) => ({
-        value: i,
-        text: window.speciesNames?.[p.row] || `#${p.row} - ${p.img}`
-    }));
-    selectInstance.addOptions(options);
+function initSelectors() {
+    const baseSelect = document.getElementById("base-select");
+    const secondarySelect = document.getElementById("secondary-select");
+
+    // Populate both dropdowns
+    populatePokemonSelect(baseSelect);
+    populatePokemonSelect(secondarySelect);
+
+    // Event listeners
+    baseSelect.addEventListener("change", updateFusion);
+    secondarySelect.addEventListener("change", updateFusion);
+
+    // Initialize TomSelect
+    new TomSelect(baseSelect, { maxOptions: null });
+    new TomSelect(secondarySelect, { maxOptions: null });
 }
 
-function updateFusionDisplay() {
-    const baseId = document.querySelector("#basePokemon").value;
-    const secondaryId = document.querySelector("#secondaryPokemon").value;
+function populatePokemonSelect(select) {
+    select.innerHTML = `<option value="">Select Pokémon</option>` + 
+        pokemonData.map((p, i) => {
+            const name = speciesNames?.[p.row] || `#${p.row} - ${p.img}`;
+            return `<option value="${i}">${name}</option>`;
+        }).join("");
+}
 
-    if (!baseId || !secondaryId) return;
+function updateFusion() {
+    const baseIndex = document.getElementById("base-select").value;
+    const secondaryIndex = document.getElementById("secondary-select").value;
 
-    const basePokemon = pokemonData[baseId];
-    const secondaryPokemon = pokemonData[secondaryId];
+    if (baseIndex === "" || secondaryIndex === "") return;
 
-    const fusionTypes = [basePokemon.t1, basePokemon.t2].filter(t => t !== undefined && t !== null);
-    const fusionPassive = basePokemon.pa;
-    const fusionAbility = [secondaryPokemon.a1, secondaryPokemon.a2, secondaryPokemon.ha].filter(Boolean);
+    const basePoke = pokemonData[baseIndex];
+    const secondaryPoke = pokemonData[secondaryIndex];
 
-    const fusionContainer = document.querySelector("#fusionContainer");
+    renderFusion(basePoke, secondaryPoke);
+}
+
+function renderFusion(base, secondary) {
+    const fusionContainer = document.getElementById("fusion-container");
     fusionContainer.innerHTML = "";
 
-    const img = document.createElement("img");
-    img.src = `images/${basePokemon.img}_0.png`;
-    img.className = "pokemon-img";
-    fusionContainer.appendChild(img);
+    const fusionImage = document.createElement("img");
+    fusionImage.src = `images/${base.img}_0.png`;
+    fusionImage.className = "fusion-image";
+    fusionContainer.appendChild(fusionImage);
 
-    const typesContainer = document.createElement("div");
-    typesContainer.className = "type-container";
-    fusionTypes.forEach(type => {
+    const typeContainer = document.createElement("div");
+    typeContainer.className = "type-container";
+    [base.t1, secondary.t2].filter(type => type !== undefined).forEach(type => {
         const typeBox = document.createElement("div");
         typeBox.className = "type-box";
-        const typeName = window.fidToName?.[type] || `Type ${type}`;
-        typeBox.innerText = typeName;
-        typeBox.style.backgroundColor = window.typeColors?.[typeName] || "#777";
-        typesContainer.appendChild(typeBox);
+        typeBox.innerText = fidToName?.[type] || `Type ${type}`;
+        typeContainer.appendChild(typeBox);
     });
-    fusionContainer.appendChild(typesContainer);
+    fusionContainer.appendChild(typeContainer);
 
     const stats = document.createElement("div");
     stats.className = "stats";
-    stats.innerText = `HP: ${basePokemon.hp}, Atk: ${basePokemon.atk}, Def: ${basePokemon.def}, SpA: ${basePokemon.spa}, SpD: ${basePokemon.spd}, Spe: ${basePokemon.spe}`;
+    stats.innerText = `HP: ${Math.floor((base.hp + secondary.hp) / 2)}, Atk: ${Math.floor((base.atk + secondary.atk) / 2)}, Def: ${Math.floor((base.def + secondary.def) / 2)}, SpA: ${Math.floor((base.spa + secondary.spa) / 2)}, SpD: ${Math.floor((base.spd + secondary.spd) / 2)}, Spe: ${Math.floor((base.spe + secondary.spe) / 2)}`;
     fusionContainer.appendChild(stats);
 
-    const passive = document.createElement("div");
-    passive.innerText = `Passive Ability: ${window.fidToName?.[fusionPassive] || fusionPassive}`;
-    fusionContainer.appendChild(passive);
+    renderAbilitySelect(fusionContainer, secondary);
+    renderNatureSelect(fusionContainer);
+}
 
-    const abilityWrapper = document.createElement("div");
-    abilityWrapper.className = "ability-wrapper";
-    const abilitySelect = document.createElement("select");
-    abilitySelect.className = "ability-select";
+function renderAbilitySelect(container, pokemon) {
+    const wrapper = document.createElement("div");
+    wrapper.className = "ability-wrapper";
 
-    fusionAbility.forEach(a => {
-        const option = document.createElement("option");
-        option.value = a;
-        option.innerText = window.fidToName?.[a] || `Ability ${a}`;
-        abilitySelect.appendChild(option);
-    });
+    const select = document.createElement("select");
+    select.className = "ability-select";
+    const abilities = [pokemon.a1, pokemon.a2, pokemon.ha].filter(Boolean);
+    select.innerHTML = abilities.map(a => {
+        const name = fidToName?.[a] || `Ability ${a}`;
+        return `<option value="${a}">${name}</option>`;
+    }).join("");
 
-    setTimeout(() => new TomSelect(abilitySelect, { maxOptions: null }), 0);
-    abilityWrapper.appendChild(abilitySelect);
-    fusionContainer.appendChild(abilityWrapper);
+    wrapper.appendChild(select);
+    container.appendChild(wrapper);
 
-    const natureWrapper = document.createElement("div");
-    const natureSelect = document.createElement("select");
-    natureSelect.className = "nature-select";
+    new TomSelect(select, { maxOptions: null });
+}
+
+function renderNatureSelect(container) {
+    const wrapper = document.createElement("div");
+    wrapper.className = "nature-wrapper";
+
+    const select = document.createElement("select");
+    select.className = "nature-select";
+
     const natures = [
         "Adamant", "Bashful", "Bold", "Brave", "Calm", "Careful", "Docile", "Gentle",
         "Hardy", "Hasty", "Impish", "Jolly", "Lax", "Lonely", "Mild", "Modest", "Naive",
         "Naughty", "Quiet", "Quirky", "Rash", "Relaxed", "Sassy", "Serious", "Timid"
     ];
-    natureSelect.innerHTML = `<option value="">Select Nature</option>` +
-        natures.map(n => `<option value="${n}">${n}</option>`).join('');
-    setTimeout(() => new TomSelect(natureSelect, { maxOptions: null }), 0);
-    natureWrapper.appendChild(natureSelect);
-    fusionContainer.appendChild(natureWrapper);
+
+    select.innerHTML = `<option value="">Select Nature</option>` +
+        natures.map(n => `<option value="${n}">${n}</option>`).join("");
+
+    wrapper.appendChild(select);
+    container.appendChild(wrapper);
+
+    new TomSelect(select, { maxOptions: null });
 }
