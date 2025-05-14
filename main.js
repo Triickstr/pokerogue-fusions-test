@@ -98,22 +98,10 @@ function populateAbilities(elementId, data) {
         option.text = getAbilityName(data.a1);
         abilitySelect.appendChild(option);
     }
-    if (data.ha) {
-        const option = document.createElement('option');
-        option.value = data.ha;
-        option.text = getAbilityName(data.ha);
-        abilitySelect.appendChild(option);
-    }
 
-    setTimeout(() => { new TomSelect(`#${elementId}`); }, 0);
+    setTimeout(() => new TomSelect(`#${elementId}`), 0);
 }
 
-    if (data.ha) {
-        const option = document.createElement('option');
-        option.value = data.ha;
-        option.text = getAbilityName(data.ha);
-        abilitySelect.appendChild(option);
-    }
     new TomSelect(`#${elementId}`);
 }
 
