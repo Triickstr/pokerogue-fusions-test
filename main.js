@@ -6,11 +6,11 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function initSelectors() {
-    populatePokemonSelect("base-pokemon");
-    populatePokemonSelect("secondary-pokemon");
+    populatePokemonSelect("baseSelect");
+    populatePokemonSelect("secondarySelect");
 
-    document.getElementById("base-pokemon").addEventListener("change", updateFusionDisplay);
-    document.getElementById("secondary-pokemon").addEventListener("change", updateFusionDisplay);
+    document.getElementById("baseSelect").addEventListener("change", updateFusionDisplay);
+    document.getElementById("secondarySelect").addEventListener("change", updateFusionDisplay);
 }
 
 function populatePokemonSelect(selectId) {
@@ -22,8 +22,8 @@ function populatePokemonSelect(selectId) {
 }
 
 function updateFusionDisplay() {
-    const baseId = document.getElementById("base-pokemon").value;
-    const secondaryId = document.getElementById("secondary-pokemon").value;
+    const baseId = document.getElementById("baseSelect").value;
+    const secondaryId = document.getElementById("secondarySelect").value;
 
     const fusionContainer = document.getElementById("fusion-info");
     fusionContainer.innerHTML = "";
