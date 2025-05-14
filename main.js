@@ -136,10 +136,23 @@ function updateFusionInfo() {
     document.getElementById('fusedTyping').innerText = `${getTypeName(baseData.t1)} / ${determineSecondaryType(baseData, secondaryData)}`;
 }
 
+
 function determineSecondaryType(base, secondary) {
-    if (secondary.t2 !== undefined && secondary.t2 !== base.t1) return getTypeName(secondary.t2);
-    if (secondary.t1 !== base.t1) return getTypeName(secondary.t1);
-    return getTypeName(base.t1);
+    const primaryFirst = getTypeName(base.t1);
+    const fusionTypes = [];
+    if (secondary.t1 !== undefined) fusionTypes.push(getTypeName(secondary.t1));
+    if (secondary.t2 !== undefined) fusionTypes.push(getTypeName(secondary.t2));
+
+    let fusionPick = fusionTypes[1] || fusionTypes[0];
+
+    if (fusionTypes.length === 2 && fusionTypes[1] === primaryFirst) {
+        fusionPick = fusionTypes[0];
+    } else if (fusionTypes.length === 1 && fusionTypes[0] === primaryFirst) {
+        fusionPick = base.t2 !== undefined ? getTypeName(base.t2) : primaryFirst;
+    }
+
+    return fusionPick || "Unknown";
 }
+
 
 document.addEventListener('DOMContentLoaded', initDropdowns);
