@@ -1,103 +1,89 @@
-document.addEventListener('DOMContentLoaded', () => {
-    populatePokemonSelect();
+// Assuming pokedex_data.js loads a global variable called "items" containing the Pokémon data
+// Assuming en.js loads a global variable called "fidToName" for names and translations
+
+document.addEventListener("DOMContentLoaded", () => {
     initSelectors();
-    updateFusionResult();
 });
 
-function populatePokemonSelect() {
-    const baseSelect = document.getElementById('baseSelect');
-    const fusionSelect = document.getElementById('secondarySelect');
-
-    if (!baseSelect || !fusionSelect) {
-        console.error("Select elements not found. Check your HTML IDs.");
-        return;
-    }
-
-    // Add placeholder option
-    const placeholderOption = document.createElement('option');
-    placeholderOption.value = '';
-    placeholderOption.text = 'Select Pokémon';
-    placeholderOption.disabled = true;
-    placeholderOption.selected = true;
-
-    baseSelect.appendChild(placeholderOption.cloneNode(true));
-    fusionSelect.appendChild(placeholderOption.cloneNode(true));
-
-    // Assuming pokedex_data.js defines 'items' as the Pokémon dataset
-    items.forEach(pokemon => {
-        const name = window.speciesNames?.[pokemon.row] || `#${pokemon.row} - ${pokemon.img}`;
-
-        const baseOption = document.createElement('option');
-        baseOption.value = pokemon.row;
-        baseOption.text = name;
-
-        const fusionOption = baseOption.cloneNode(true);
-
-        baseSelect.appendChild(baseOption);
-        fusionSelect.appendChild(fusionOption);
-    });
-
-    new TomSelect(baseSelect);
-    new TomSelect(fusionSelect);
-}
-
 function initSelectors() {
-    const baseSelect = document.getElementById('baseSelect');
-    const fusionSelect = document.getElementById('secondarySelect');
+    populatePokemonSelect("base-pokemon");
+    populatePokemonSelect("secondary-pokemon");
 
-    if (baseSelect && fusionSelect) {
-        baseSelect.addEventListener('change', updateFusionResult);
-        fusionSelect.addEventListener('change', updateFusionResult);
-    } else {
-        console.error("Select elements not found in DOM.");
-    }
+    document.getElementById("base-pokemon").addEventListener("change", updateFusionDisplay);
+    document.getElementById("secondary-pokemon").addEventListener("change", updateFusionDisplay);
 }
 
-function updateFusionResult() {
-    const baseSelect = document.getElementById('baseSelect');
-    const fusionSelect = document.getElementById('secondarySelect');
-    const resultContainer = document.getElementById('fusionResult');
+function populatePokemonSelect(selectId) {
+    const select = document.getElementById(selectId);
+    select.innerHTML = `<option value="">Select Pokémon</option>` +
+        items.map((p, i) => `<option value="${i}">${fidToName[p.row] || p.img}</option>`).join("");
 
-    if (!resultContainer) {
-        console.error("Fusion result container not found.");
-        return;
-    }
-
-    const baseId = parseInt(baseSelect.value);
-    const fusionId = parseInt(fusionSelect.value);
-
-    const basePokemon = items.find(p => p.row === baseId);
-    const fusionPokemon = items.find(p => p.row === fusionId);
-
-    if (!basePokemon || !fusionPokemon) {
-        resultContainer.innerHTML = '<p>Select both Pokémon to calculate fusion.</p>';
-        return;
-    }
-
-    // Calculate fusion result (use logic similar to your team builder)
-    const resultHTML = `
-        <h3>Fusion Result</h3>
-        <p><strong>Base:</strong> ${window.speciesNames?.[basePokemon.row] || basePokemon.img}</p>
-        <p><strong>Secondary:</strong> ${window.speciesNames?.[fusionPokemon.row] || fusionPokemon.img}</p>
-        <p><strong>Fusion Typings:</strong> ${calculateFusionTypes(basePokemon, fusionPokemon)}</p>
-        <p><strong>Abilities:</strong> ${calculateAbilities(basePokemon, fusionPokemon)}</p>
-    `;
-
-    resultContainer.innerHTML = resultHTML;
+    new TomSelect(`#${selectId}`, { maxOptions: null });
 }
 
-function calculateFusionTypes(base, fusion) {
-    const types = [...(base.types || []), ...(fusion.types || [])];
-    const uniqueTypes = [...new Set(types)];
-    return uniqueTypes.map(t => window.fidToName?.[t] || t).join(', ');
-}
+function updateFusionDisplay() {
+    const baseId = document.getElementById("base-pokemon").value;
+    const secondaryId = document.getElementById("secondary-pokemon").value;
 
-function calculateAbilities(base, fusion) {
-    const basePassive = window.fidToName?.[base.pa] || `Passive ${base.pa}`;
-    const fusionAbilities = [fusion.a1, fusion.a2, fusion.ha]
-        .filter(Boolean)
-        .map(a => window.fidToName?.[a] || `Ability ${a}`)
-        .join(', ');
+    const fusionContainer = document.getElementById("fusion-info");
+    fusionContainer.innerHTML = "";
 
-    return `<strong>Passive:</strong> ${basePassive} | <strong>Active:</strong> ${fusionAbilities}`;
+    if (baseId === "" || secondaryId === "") return;
+
+    const basePoke = items[baseId];
+    const secondaryPoke = items[secondaryId];
+
+    // Image
+    const img = document.createElement("img");
+    img.src = `images/${basePoke.img}_0.png`;
+    img.className = "pokemon-img";
+    fusionContainer.appendChild(img);
+
+    // Typing
+    const typeContainer = document.createElement("div");
+    typeContainer.className = "type-container";
+
+    [basePoke.t1, basePoke.t2].filter(type => type !== undefined).forEach(type => {
+        const typeName = fidToName[type] || `Type ${type}`;
+        const typeBox = document.createElement("div");
+        typeBox.className = "type-box";
+        typeBox.innerText = typeName;
+        typeBox.style.backgroundColor = typeColors?.[typeName] || "#777";
+        typeContainer.appendChild(typeBox);
+    });
+    fusionContainer.appendChild(typeContainer);
+
+    // Stats
+    const stats = document.createElement("div");
+    stats.className = "stats";
+    stats.innerText = `HP: ${basePoke.hp}, Atk: ${basePoke.atk}, Def: ${basePoke.def}, SpA: ${basePoke.spa}, SpD: ${basePoke.spd}, Spe: ${basePoke.spe}`;
+    fusionContainer.appendChild(stats);
+
+    // Ability Dropdown
+    const abilitySelect = document.createElement("select");
+    abilitySelect.className = "ability-select";
+    const abilities = [basePoke.a1, basePoke.a2, basePoke.ha].filter(Boolean);
+    abilitySelect.innerHTML = `<option value="">Select Ability</option>` +
+        abilities.map(a => `<option value="${a}">${fidToName[a] || `Ability ${a}`}</option>`).join("");
+    fusionContainer.appendChild(abilitySelect);
+    new TomSelect(abilitySelect, { maxOptions: null });
+
+    // Passive Ability
+    const passive = document.createElement("div");
+    const passiveName = fidToName[basePoke.pa] || `Passive ${basePoke.pa}`;
+    passive.innerText = `Passive Ability: ${passiveName}`;
+    fusionContainer.appendChild(passive);
+
+    // Nature Dropdown
+    const natureSelect = document.createElement("select");
+    natureSelect.className = "nature-select";
+    const natures = [
+        "Adamant", "Bashful", "Bold", "Brave", "Calm", "Careful", "Docile", "Gentle", "Hardy", "Hasty",
+        "Impish", "Jolly", "Lax", "Lonely", "Mild", "Modest", "Naive", "Naughty", "Quiet", "Quirky",
+        "Rash", "Relaxed", "Sassy", "Serious", "Timid"
+    ];
+    natureSelect.innerHTML = `<option value="">Select Nature</option>` +
+        natures.map(n => `<option value="${n}">${n}</option>`).join("");
+    fusionContainer.appendChild(natureSelect);
+    new TomSelect(natureSelect, { maxOptions: null });
 }
