@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const baseSelect = document.getElementById("baseSelect");
     const secondarySelect = document.getElementById("secondarySelect");
 
-    const populateDropdown = (selectElement) => {
+    const updateDropdown = (selectElement) => {
         selectElement.innerHTML = '<option value="">Select Pokémon</option>' +
             items.map((p, idx) => {
                 const name = speciesNames?.[p.row] || `#${p.row}`;
@@ -13,12 +13,13 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     const updateDisplay = (prefix, pokemon) => {
-        document.getElementById(prefix + "HP").textContent = pokemon.hp;
-        document.getElementById(prefix + "Atk").textContent = pokemon.atk;
-        document.getElementById(prefix + "SpAtk").textContent = pokemon.spa;
-        document.getElementById(prefix + "Def").textContent = pokemon.def;
-        document.getElementById(prefix + "SpDef").textContent = pokemon.spd;
-        document.getElementById(prefix + "Spe").textContent = pokemon.spe;
+        const imgContainer = document.getElementById(prefix + "ImageContainer");
+        imgContainer.innerHTML = `<img src="images/${pokemon.img}_0.png" class="fusion-img">`;
+
+        const stats = ["HP", "Atk", "SpAtk", "Def", "SpDef", "Spe"];
+        stats.forEach(stat => {
+            document.getElementById(`${prefix}${stat}`).textContent = pokemon[stat.toLowerCase()];
+        });
 
         const typingContainer = document.getElementById(prefix + "Typing");
         typingContainer.innerHTML = "";
@@ -26,31 +27,23 @@ document.addEventListener("DOMContentLoaded", () => {
             const typeName = fidToName?.[type] || `Type ${type}`;
             const box = document.createElement("div");
             box.textContent = typeName;
+            box.style.backgroundColor = typeColors?.[typeName] || '#777';
+            box.className = "type-box";
             typingContainer.appendChild(box);
         });
 
-        const imgContainer = document.getElementById(prefix + "ImageContainer");
-        imgContainer.innerHTML = `<img src="images/${pokemon.img}_0.png" class="fusion-img">`;
-
-        const abilitySelect = document.getElementById(prefix + "Ability");
+        const abilitySelect = document.getElementById(`${prefix}Ability`);
         const abilities = [pokemon.a1, pokemon.a2, pokemon.ha].filter(Boolean);
         abilitySelect.innerHTML = '<option value="">Select Ability</option>' + 
-            abilities.map(a => {
-                const name = fidToName?.[a] || `Ability ${a}`;
-                return `<option value="${a}">${name}</option>`;
-            }).join('');
+            abilities.map(a => `<option value="${a}">${fidToName?.[a] || `Ability ${a}`}</option>`).join('');
         new TomSelect(abilitySelect, { maxOptions: null });
 
-        const passiveAbility = fidToName?.[pokemon.pa] || `Passive ${pokemon.pa}`;
-        document.getElementById(prefix + "Passive").textContent = passiveAbility;
+        document.getElementById(`${prefix}Passive`).textContent = fidToName?.[pokemon.pa] || `Passive ${pokemon.pa}`;
 
-        const natureSelect = document.getElementById(prefix + "Nature");
-        const natures = [
-            "Adamant", "Bashful", "Bold", "Brave", "Calm", "Careful", "Docile", "Gentle",
-            "Hardy", "Hasty", "Impish", "Jolly", "Lax", "Lonely", "Mild", "Modest", "Naive",
-            "Naughty", "Quiet", "Quirky", "Rash", "Relaxed", "Sassy", "Serious", "Timid"
-        ];
-        natureSelect.innerHTML = '<option value="">Select Nature</option>' +
+        const natureSelect = document.getElementById(`${prefix}Nature`);
+        const natures = ["Adamant","Bashful","Bold","Brave","Calm","Careful","Docile","Gentle","Hardy","Hasty","Impish","Jolly",
+            "Lax","Lonely","Mild","Modest","Naive","Naughty","Quiet","Quirky","Rash","Relaxed","Sassy","Serious","Timid"];
+        natureSelect.innerHTML = '<option value="">Select Nature</option>' + 
             natures.map(n => `<option value="${n}">${n}</option>`).join('');
         new TomSelect(natureSelect, { maxOptions: null });
     };
@@ -67,48 +60,50 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("fusedBaseImg").src = `images/${basePoke.img}_0.png`;
         document.getElementById("fusedSecondaryImg").src = `images/${secPoke.img}_0.png`;
 
-        const fusedStats = {};
         ["hp", "atk", "spa", "def", "spd", "spe"].forEach(stat => {
-            fusedStats[stat] = Math.floor((basePoke[stat] + secPoke[stat]) / 2);
+            const avg = Math.floor((basePoke[stat] + secPoke[stat]) / 2);
+            document.getElementById(`fused${stat.charAt(0).toUpperCase() + stat.slice(1)}`).textContent = avg;
         });
 
-        document.getElementById("fusedHP").textContent = fusedStats.hp;
-        document.getElementById("fusedAtk").textContent = fusedStats.atk;
-        document.getElementById("fusedSpAtk").textContent = fusedStats.spa;
-        document.getElementById("fusedDef").textContent = fusedStats.def;
-        document.getElementById("fusedSpDef").textContent = fusedStats.spd;
-        document.getElementById("fusedSpe").textContent = fusedStats.spe;
+        const fusedTyping = document.getElementById("fusedTyping");
+        fusedTyping.innerHTML = "";
 
-        const typingContainer = document.getElementById("fusedTyping");
-        typingContainer.innerHTML = "";
-        const types = [fidToName?.[basePoke.t1], fidToName?.[secPoke.t1]];
-        types.forEach(typeName => {
+        const primaryType = fidToName?.[basePoke.t1];
+        const secondaryType = fidToName?.[secPoke.t1];
+
+        [primaryType, secondaryType].forEach(typeName => {
             const box = document.createElement("div");
             box.textContent = typeName || "—";
-            typingContainer.appendChild(box);
+            box.style.backgroundColor = typeColors?.[typeName] || '#777';
+            box.className = "type-box";
+            fusedTyping.appendChild(box);
         });
 
-        const ability = fidToName?.[basePoke.a1] || "—";
-        const passive = fidToName?.[basePoke.pa] || "—";
-        const nature = document.getElementById("baseNature").value || "—";
+        const fusedAbility = fidToName?.[secPoke.a1] || "—";
+        const fusedPassive = fidToName?.[basePoke.pa] || "—";
+        const fusedNature = document.getElementById("baseNature").value || "—";
 
-        document.getElementById("fusedAbility").textContent = ability;
-        document.getElementById("fusedPassive").textContent = passive;
-        document.getElementById("fusedNature").textContent = nature;
+        document.getElementById("fusedAbility").textContent = fusedAbility;
+        document.getElementById("fusedPassive").textContent = fusedPassive;
+        document.getElementById("fusedNature").textContent = fusedNature;
     };
 
     baseSelect.addEventListener("change", (e) => {
         const idx = e.target.value;
-        if (idx !== "") updateDisplay("base", items[idx]);
-        updateFusion();
+        if (idx !== "") {
+            updateDisplay("base", items[idx]);
+            updateFusion();
+        }
     });
 
     secondarySelect.addEventListener("change", (e) => {
         const idx = e.target.value;
-        if (idx !== "") updateDisplay("secondary", items[idx]);
-        updateFusion();
+        if (idx !== "") {
+            updateDisplay("secondary", items[idx]);
+            updateFusion();
+        }
     });
 
-    populateDropdown(baseSelect);
-    populateDropdown(secondarySelect);
+    updateDropdown(baseSelect);
+    updateDropdown(secondarySelect);
 });
