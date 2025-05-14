@@ -6,7 +6,7 @@ const natures = [
 ];
 
 function getNameFromId(id) {
-    return speciesNames?.[id] || "Unknown";
+    return speciesNames?.[id] || `#${id}`;
 }
 
 function getTypeName(id) {
@@ -26,7 +26,7 @@ function initDropdowns() {
     items.forEach(pokemon => {
         const option = document.createElement('option');
         option.value = pokemon.row;
-        option.text = getNameFromId(pokemon.dex);
+        option.text = getNameFromId(pokemon.row);
         baseSelect.appendChild(option.cloneNode(true));
         secondarySelect.appendChild(option.cloneNode(true));
     });
