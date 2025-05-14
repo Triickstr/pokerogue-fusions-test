@@ -2,100 +2,72 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Fusion Calculator</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PokeRogue Fusion Calculator</title>
+    <link href="styles.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js"></script>
     <script src="en.js"></script>
-<script src="pokedex_data.js"></script>
-    <script src="poke_data.js"></script>
-    <script src="app.js"></script>
-    <script src="fusion_logic.js" defer></script>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-<link href="styles.css" rel="stylesheet">
+    <script src="pokedex_data.js"></script>
+    <script src="main.js" defer></script>
 </head>
-<body class="bg-gray-100 font-sans p-6">
-    <div class="grid grid-cols-3 gap-6">
-        <!-- Base Pokemon -->
-        <div class="bg-white p-4 rounded-2xl shadow">
-            <h2 class="text-xl font-bold mb-4 text-center">Base Pokémon</h2>
-            <select id="basePokemon" class="w-full p-2 mb-4"></select>
-            <div id="baseTyping" class="flex justify-center gap-2 mb-4"></div>
-            <div class="flex justify-between mb-4">
-                <div>
-                    <p>HP: <span id="baseHP"></span></p>
-                    <p>Atk: <span id="baseAtk"></span></p>
-                    <p>Sp Atk: <span id="baseSpAtk"></span></p>
-                </div>
-                <div>
-                    <p>Def: <span id="baseDef"></span></p>
-                    <p>Sp Def: <span id="baseSpDef"></span></p>
-                    <p>Spe: <span id="baseSpe"></span></p>
-                </div>
+<body>
+    <div class="container">
+        <div class="pokemon-box base">
+            <h2>Base Pokémon</h2>
+            <div id="baseImageContainer"></div>
+            <select id="baseSelect"></select>
+            <div id="baseTyping" class="typing"></div>
+            <div class="stats">
+                <div>HP: <span id="baseHP"></span></div>
+                <div>Atk: <span id="baseAtk"></span></div>
+                <div>Sp Atk: <span id="baseSpAtk"></span></div>
+                <div>Def: <span id="baseDef"></span></div>
+                <div>Sp Def: <span id="baseSpDef"></span></div>
+                <div>Spe: <span id="baseSpe"></span></div>
             </div>
-            <div class="flex gap-4">
-                <div class="w-1/2">
-                    <select id="baseAbility" class="w-full p-2 mb-2"></select>
-                    <p class="text-center">Passive: <span id="basePassive"></span></p>
-                </div>
-                <div class="w-1/2">
-                    <select id="baseNature" class="w-full p-2"></select>
-                </div>
-            </div>
+            <select id="baseAbility"></select>
+            <div class="passive">Passive: <span id="basePassive"></span></div>
+            <select id="baseNature"></select>
         </div>
 
-        <!-- Fused Pokemon -->
-        <div class="bg-white p-4 rounded-2xl shadow text-center">
-            <h2 class="text-xl font-bold mb-4">Fused Pokémon</h2>
-            <div class="flex justify-center items-center gap-4 mb-4">
-                <img id="fusedBaseImg" class="w-24 h-24 object-contain" />
-                <img id="fusedSecondaryImg" class="w-24 h-24 object-contain" />
+        <div class="pokemon-box fusion">
+            <h2>Fused Pokémon</h2>
+            <div class="fusion-images">
+                <img id="fusedBaseImg" class="fusion-img">
+                <img id="fusedSecondaryImg" class="fusion-img">
             </div>
-            <div id="fusedTyping" class="flex justify-center gap-2 mb-4"></div>
-            <div class="flex justify-between mb-4">
-                <div>
-                    <p>HP: <span id="fusedHP"></span></p>
-                    <p>Atk: <span id="fusedAtk"></span></p>
-                    <p>Sp Atk: <span id="fusedSpAtk"></span></p>
-                </div>
-                <div>
-                    <p>Def: <span id="fusedDef"></span></p>
-                    <p>Sp Def: <span id="fusedSpDef"></span></p>
-                    <p>Spe: <span id="fusedSpe"></span></p>
-                </div>
+            <div id="fusedTyping" class="typing"></div>
+            <div class="stats">
+                <div>HP: <span id="fusedHP"></span></div>
+                <div>Atk: <span id="fusedAtk"></span></div>
+                <div>Sp Atk: <span id="fusedSpAtk"></span></div>
+                <div>Def: <span id="fusedDef"></span></div>
+                <div>Sp Def: <span id="fusedSpDef"></span></div>
+                <div>Spe: <span id="fusedSpe"></span></div>
             </div>
-            <p>Ability: <span id="fusedAbility"></span></p>
-            <p>Passive: <span id="fusedPassive"></span></p>
-            <p>Nature: <span id="fusedNature"></span></p>
+            <div>Ability: <span id="fusedAbility"></span></div>
+            <div class="passive">Passive: <span id="fusedPassive"></span></div>
+            <div>Nature: <span id="fusedNature"></span></div>
         </div>
 
-        <!-- Secondary Pokemon -->
-        <div class="bg-white p-4 rounded-2xl shadow">
-            <h2 class="text-xl font-bold mb-4 text-center">Secondary Pokémon</h2>
-            <select id="secondaryPokemon" class="w-full p-2 mb-4"></select>
-            <div id="secondaryTyping" class="flex justify-center gap-2 mb-4"></div>
-            <div class="flex justify-between mb-4">
-                <div>
-                    <p>HP: <span id="secondaryHP"></span></p>
-                    <p>Atk: <span id="secondaryAtk"></span></p>
-                    <p>Sp Atk: <span id="secondarySpAtk"></span></p>
-                </div>
-                <div>
-                    <p>Def: <span id="secondaryDef"></span></p>
-                    <p>Sp Def: <span id="secondarySpDef"></span></p>
-                    <p>Spe: <span id="secondarySpe"></span></p>
-                </div>
+        <div class="pokemon-box secondary">
+            <h2>Secondary Pokémon</h2>
+            <div id="secondaryImageContainer"></div>
+            <select id="secondarySelect"></select>
+            <div id="secondaryTyping" class="typing"></div>
+            <div class="stats">
+                <div>HP: <span id="secondaryHP"></span></div>
+                <div>Atk: <span id="secondaryAtk"></span></div>
+                <div>Sp Atk: <span id="secondarySpAtk"></span></div>
+                <div>Def: <span id="secondaryDef"></span></div>
+                <div>Sp Def: <span id="secondarySpDef"></span></div>
+                <div>Spe: <span id="secondarySpe"></span></div>
             </div>
-            <div class="flex gap-4">
-                <div class="w-1/2">
-                    <select id="secondaryAbility" class="w-full p-2 mb-2"></select>
-                    <p class="text-center">Passive: <span id="secondaryPassive"></span></p>
-                </div>
-                <div class="w-1/2">
-                    <select id="secondaryNature" class="w-full p-2"></select>
-                </div>
-            </div>
+            <select id="secondaryAbility"></select>
+            <div class="passive">Passive: <span id="secondaryPassive"></span></div>
+            <select id="secondaryNature"></select>
         </div>
     </div>
 </body>
