@@ -78,10 +78,18 @@ function updateBaseInfo() {
 
     document.getElementById('baseImageContainer').innerHTML = `<img src="images/${baseData.img}_0.png" alt="${getNameFromId(baseData.dex)}" class="fusion-img">`;
     
+
 const baseTypingEl = document.getElementById('baseTyping');
-baseTypingEl.innerText = `${getTypeName(baseData.t1)}` + (baseData.t2 !== undefined ? ` / ${getTypeName(baseData.t2)}` : '');
-const basePrimaryColor = window.typeColors?.[getTypeName(baseData.t1)] || '#777';
-baseTypingEl.style.backgroundColor = basePrimaryColor;
+baseTypingEl.innerHTML = '';
+const baseTypes = [baseData.t1, baseData.t2].filter(t => t !== undefined);
+baseTypes.forEach(typeId => {
+    const typeName = getTypeName(typeId);
+    const span = document.createElement('span');
+    span.textContent = typeName;
+    span.style.backgroundColor = window.typeColors?.[typeName] || '#777';
+    baseTypingEl.appendChild(span);
+});
+
 
     document.getElementById('baseHP').innerText = baseData.hp;
     document.getElementById('baseAtk').innerText = baseData.atk;
@@ -101,10 +109,18 @@ function updateSecondaryInfo() {
 
     document.getElementById('secondaryImageContainer').innerHTML = `<img src="images/${secondaryData.img}_0.png" alt="${getNameFromId(secondaryData.dex)}" class="fusion-img">`;
     
+
 const secondaryTypingEl = document.getElementById('secondaryTyping');
-secondaryTypingEl.innerText = `${getTypeName(secondaryData.t1)}` + (secondaryData.t2 !== undefined ? ` / ${getTypeName(secondaryData.t2)}` : '');
-const secondaryPrimaryColor = window.typeColors?.[getTypeName(secondaryData.t1)] || '#777';
-secondaryTypingEl.style.backgroundColor = secondaryPrimaryColor;
+secondaryTypingEl.innerHTML = '';
+const secondaryTypes = [secondaryData.t1, secondaryData.t2].filter(t => t !== undefined);
+secondaryTypes.forEach(typeId => {
+    const typeName = getTypeName(typeId);
+    const span = document.createElement('span');
+    span.textContent = typeName;
+    span.style.backgroundColor = window.typeColors?.[typeName] || '#777';
+    secondaryTypingEl.appendChild(span);
+});
+
 
     document.getElementById('secondaryHP').innerText = secondaryData.hp;
     document.getElementById('secondaryAtk').innerText = secondaryData.atk;
@@ -166,7 +182,18 @@ function updateFusionInfo() {
     document.getElementById('fusedPassive').innerText = getAbilityName(baseData.pa);
     document.getElementById('fusedNature').innerText = document.getElementById('baseNature').value;
 
-    document.getElementById('fusedTyping').innerText = `${getTypeName(baseData.t1)} / ${determineSecondaryType(baseData, secondaryData)}`;
+    
+const fusedTypingEl = document.getElementById('fusedTyping');
+fusedTypingEl.innerHTML = '';
+const fusionPrimaryType = getTypeName(baseData.t1);
+const fusionSecondaryType = determineSecondaryType(baseData, secondaryData);
+[fusionPrimaryType, fusionSecondaryType].forEach(typeName => {
+    const span = document.createElement('span');
+    span.textContent = typeName;
+    span.style.backgroundColor = window.typeColors?.[typeName] || '#777';
+    fusedTypingEl.appendChild(span);
+});
+
 }
 
 
