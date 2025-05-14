@@ -69,6 +69,9 @@ function initDropdowns() {
 
     baseSelect.addEventListener('change', updateBaseInfo);
     secondarySelect.addEventListener('change', updateSecondaryInfo);
+document.getElementById('baseAbility').addEventListener('change', updateFusionInfo);
+document.getElementById('secondaryAbility').addEventListener('change', updateFusionInfo);
+document.getElementById('baseNature').addEventListener('change', updateFusionInfo);
 }
 
 function updateBaseInfo() {
@@ -183,6 +186,13 @@ function updateFusionInfo() {
     document.getElementById('fusedNature').innerText = document.getElementById('baseNature').value;
 
     
+
+const fusionAbility = document.getElementById('secondaryAbility')?.value;
+document.getElementById('fusedAbility').innerText = getAbilityName(fusionAbility);
+
+const fusionNature = document.getElementById('baseNature')?.value;
+document.getElementById('fusedNature').innerText = fusionNature;
+
 const fusedTypingEl = document.getElementById('fusedTyping');
 fusedTypingEl.innerHTML = '';
 const fusionPrimaryType = getTypeName(baseData.t1);
