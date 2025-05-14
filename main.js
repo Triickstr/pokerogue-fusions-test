@@ -53,7 +53,7 @@ function updateBaseInfo() {
     const baseData = items.find(p => p.row == selectedId);
     if (!baseData) return;
 
-    document.getElementById('baseImageContainer').innerHTML = `<img src="images/${baseData.img}.png" alt="${getNameFromId(baseData.dex)}" class="fusion-img">`;
+    document.getElementById('baseImageContainer').innerHTML = `<img src="images/${baseData.img}_0.png" alt="${getNameFromId(baseData.dex)}" class="fusion-img">`;
     document.getElementById('baseTyping').innerText = `${getTypeName(baseData.t1)}` + (baseData.t2 !== undefined ? ` / ${getTypeName(baseData.t2)}` : '');
     document.getElementById('baseHP').innerText = baseData.hp;
     document.getElementById('baseAtk').innerText = baseData.atk;
@@ -71,7 +71,7 @@ function updateSecondaryInfo() {
     const secondaryData = items.find(p => p.row == selectedId);
     if (!secondaryData) return;
 
-    document.getElementById('secondaryImageContainer').innerHTML = `<img src="images/${secondaryData.img}.png" alt="${getNameFromId(secondaryData.dex)}" class="fusion-img">`;
+    document.getElementById('secondaryImageContainer').innerHTML = `<img src="images/${secondaryData.img}_0.png" alt="${getNameFromId(secondaryData.dex)}" class="fusion-img">`;
     document.getElementById('secondaryTyping').innerText = `${getTypeName(secondaryData.t1)}` + (secondaryData.t2 !== undefined ? ` / ${getTypeName(secondaryData.t2)}` : '');
     document.getElementById('secondaryHP').innerText = secondaryData.hp;
     document.getElementById('secondaryAtk').innerText = secondaryData.atk;
@@ -112,8 +112,8 @@ function updateFusionInfo() {
 
     const avg = (a, b) => Math.round((a + b) / 2);
 
-    document.getElementById('fusedBaseImg').src = `images/${baseData.img}.png`;
-    document.getElementById('fusedSecondaryImg').src = `images/${secondaryData.img}.png`;
+    document.getElementById('fusedBaseImg').src = `images/${baseData.img}_0.png`;
+    document.getElementById('fusedSecondaryImg').src = `images/${secondaryData.img}_0.png`;
 
     document.getElementById('fusedHP').innerText = avg(baseData.hp, secondaryData.hp);
     document.getElementById('fusedAtk').innerText = avg(baseData.atk, secondaryData.atk);
