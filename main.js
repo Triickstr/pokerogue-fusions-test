@@ -13,6 +13,16 @@ function populatePokemonSelect() {
         return;
     }
 
+    // Add placeholder option
+    const placeholderOption = document.createElement('option');
+    placeholderOption.value = '';
+    placeholderOption.text = 'Select Pokémon';
+    placeholderOption.disabled = true;
+    placeholderOption.selected = true;
+
+    baseSelect.appendChild(placeholderOption.cloneNode(true));
+    fusionSelect.appendChild(placeholderOption.cloneNode(true));
+
     // Assuming pokedex_data.js defines 'items' as the Pokémon dataset
     items.forEach(pokemon => {
         const name = window.speciesNames?.[pokemon.row] || `#${pokemon.row} - ${pokemon.img}`;
