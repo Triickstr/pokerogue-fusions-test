@@ -6,15 +6,15 @@ const natures = [
 ];
 
 function getNameFromId(id) {
-    return speciesNames[id] || "Unknown";
+    return speciesNames?.[id] || "Unknown";
 }
 
 function getTypeName(id) {
-    return catToName[id] || "Unknown";
+    return fidToName?.[id] || "Unknown";
 }
 
 function getAbilityName(id) {
-    return fidToDesc[id] || "Unknown";
+    return fidToName?.[id] || "Unknown";
 }
 
 function initDropdowns() {
