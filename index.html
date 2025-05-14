@@ -1,0 +1,100 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fusion Calculator</title>
+    <link href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js"></script>
+    <script src="en.js"></script>
+    <script src="poke_data.js"></script>
+    <script src="app.js" defer></script>
+    <script src="fusion_logic.js" defer></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 font-sans p-6">
+    <div class="grid grid-cols-3 gap-6">
+        <!-- Base Pokemon -->
+        <div class="bg-white p-4 rounded-2xl shadow">
+            <h2 class="text-xl font-bold mb-4 text-center">Base Pokémon</h2>
+            <select id="basePokemon" class="w-full p-2 mb-4"></select>
+            <div id="baseTyping" class="flex justify-center gap-2 mb-4"></div>
+            <div class="flex justify-between mb-4">
+                <div>
+                    <p>HP: <span id="baseHP"></span></p>
+                    <p>Atk: <span id="baseAtk"></span></p>
+                    <p>Sp Atk: <span id="baseSpAtk"></span></p>
+                </div>
+                <div>
+                    <p>Def: <span id="baseDef"></span></p>
+                    <p>Sp Def: <span id="baseSpDef"></span></p>
+                    <p>Spe: <span id="baseSpe"></span></p>
+                </div>
+            </div>
+            <div class="flex gap-4">
+                <div class="w-1/2">
+                    <select id="baseAbility" class="w-full p-2 mb-2"></select>
+                    <p class="text-center">Passive: <span id="basePassive"></span></p>
+                </div>
+                <div class="w-1/2">
+                    <select id="baseNature" class="w-full p-2"></select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Fused Pokemon -->
+        <div class="bg-white p-4 rounded-2xl shadow text-center">
+            <h2 class="text-xl font-bold mb-4">Fused Pokémon</h2>
+            <div class="flex justify-center items-center gap-4 mb-4">
+                <img id="fusedBaseImg" class="w-24 h-24 object-contain" />
+                <img id="fusedSecondaryImg" class="w-24 h-24 object-contain" />
+            </div>
+            <div id="fusedTyping" class="flex justify-center gap-2 mb-4"></div>
+            <div class="flex justify-between mb-4">
+                <div>
+                    <p>HP: <span id="fusedHP"></span></p>
+                    <p>Atk: <span id="fusedAtk"></span></p>
+                    <p>Sp Atk: <span id="fusedSpAtk"></span></p>
+                </div>
+                <div>
+                    <p>Def: <span id="fusedDef"></span></p>
+                    <p>Sp Def: <span id="fusedSpDef"></span></p>
+                    <p>Spe: <span id="fusedSpe"></span></p>
+                </div>
+            </div>
+            <p>Ability: <span id="fusedAbility"></span></p>
+            <p>Passive: <span id="fusedPassive"></span></p>
+            <p>Nature: <span id="fusedNature"></span></p>
+        </div>
+
+        <!-- Secondary Pokemon -->
+        <div class="bg-white p-4 rounded-2xl shadow">
+            <h2 class="text-xl font-bold mb-4 text-center">Secondary Pokémon</h2>
+            <select id="secondaryPokemon" class="w-full p-2 mb-4"></select>
+            <div id="secondaryTyping" class="flex justify-center gap-2 mb-4"></div>
+            <div class="flex justify-between mb-4">
+                <div>
+                    <p>HP: <span id="secondaryHP"></span></p>
+                    <p>Atk: <span id="secondaryAtk"></span></p>
+                    <p>Sp Atk: <span id="secondarySpAtk"></span></p>
+                </div>
+                <div>
+                    <p>Def: <span id="secondaryDef"></span></p>
+                    <p>Sp Def: <span id="secondarySpDef"></span></p>
+                    <p>Spe: <span id="secondarySpe"></span></p>
+                </div>
+            </div>
+            <div class="flex gap-4">
+                <div class="w-1/2">
+                    <select id="secondaryAbility" class="w-full p-2 mb-2"></select>
+                    <p class="text-center">Passive: <span id="secondaryPassive"></span></p>
+                </div>
+                <div class="w-1/2">
+                    <select id="secondaryNature" class="w-full p-2"></select>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
