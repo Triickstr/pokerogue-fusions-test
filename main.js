@@ -188,10 +188,12 @@ fusedTypingEl.innerHTML = '';
 const fusionPrimaryType = getTypeName(baseData.t1);
 const fusionSecondaryType = determineSecondaryType(baseData, secondaryData);
 [fusionPrimaryType, fusionSecondaryType].forEach(typeName => {
-    const span = document.createElement('span');
-    span.textContent = typeName;
-    span.style.backgroundColor = window.typeColors?.[typeName] || '#777';
-    fusedTypingEl.appendChild(span);
+    if (typeName) { // Skip nulls to avoid duplicate typings
+        const span = document.createElement('span');
+        span.textContent = typeName;
+        span.style.backgroundColor = window.typeColors?.[typeName] || '#777';
+        fusedTypingEl.appendChild(span);
+    }
 });
 
 }
@@ -202,6 +204,11 @@ function determineSecondaryType(base, secondary) {
     const fusionTypes = [];
     if (secondary.t1 !== undefined) fusionTypes.push(getTypeName(secondary.t1));
     if (secondary.t2 !== undefined) fusionTypes.push(getTypeName(secondary.t2));
+
+    // Check if both are mono-type and the same type
+    if (fusionTypes.length === 1 && fusionTypes[0] === primaryFirst && base.t2 === undefined) {
+        return null; // Indicate that only one type should be displayed
+    }
 
     let fusionPick = fusionTypes[1] || fusionTypes[0];
 
