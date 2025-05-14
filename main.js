@@ -1,5 +1,7 @@
 // Initialize global variables and datasets
-const pokemonData = typeof window.items !== 'undefined' ? window.items : (typeof items !== 'undefined' ? items : []);
+window.pokemonData = typeof items !== 'undefined' ? items : [];
+window.speciesNames = window.speciesNames || {};
+window.fidToName = window.fidToName || {};
 window.typeColors = {
     Normal: '#A8A77A', Fire: '#EE8130', Water: '#6390F0', Electric: '#F7D02C',
     Grass: '#7AC74C', Ice: '#96D9D6', Fighting: '#C22E28', Poison: '#A33EA1',
