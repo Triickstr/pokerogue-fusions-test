@@ -39,8 +39,8 @@ function initDropdowns() {
         secondaryNature.appendChild(option.cloneNode(true));
     });
 
-    new TomSelect('#baseSelect');
-    new TomSelect('#secondarySelect');
+    new TomSelect('#baseSelect', { onChange: () => updateBaseInfo() });
+    new TomSelect('#secondarySelect', { onChange: () => updateSecondaryInfo() });
     new TomSelect('#baseNature');
     new TomSelect('#secondaryNature');
 
@@ -52,9 +52,6 @@ function updateBaseInfo() {
     const selectedId = document.getElementById('baseSelect').value;
     const baseData = items.find(p => p.row == selectedId);
     if (!baseData) return;
-
-    populateAbilities('baseAbility', baseData);
-    document.getElementById('basePassive').innerText = getAbilityName(baseData.pa);
 
     document.getElementById('baseImageContainer').innerHTML = `<img src="images/${baseData.img}_0.png" alt="${getNameFromId(baseData.dex)}" class="fusion-img">`;
     document.getElementById('baseTyping').innerText = `${getTypeName(baseData.t1)}` + (baseData.t2 !== undefined ? ` / ${getTypeName(baseData.t2)}` : '');
@@ -74,9 +71,6 @@ function updateSecondaryInfo() {
     const secondaryData = items.find(p => p.row == selectedId);
     if (!secondaryData) return;
 
-    populateAbilities('secondaryAbility', secondaryData);
-    document.getElementById('secondaryPassive').innerText = getAbilityName(secondaryData.pa);
-
     document.getElementById('secondaryImageContainer').innerHTML = `<img src="images/${secondaryData.img}_0.png" alt="${getNameFromId(secondaryData.dex)}" class="fusion-img">`;
     document.getElementById('secondaryTyping').innerText = `${getTypeName(secondaryData.t1)}` + (secondaryData.t2 !== undefined ? ` / ${getTypeName(secondaryData.t2)}` : '');
     document.getElementById('secondaryHP').innerText = secondaryData.hp;
@@ -90,7 +84,29 @@ function updateSecondaryInfo() {
     updateFusionInfo();
 }
 
+
 function populateAbilities(elementId, data) {
+    const abilitySelect = document.getElementById(elementId);
+    if (abilitySelect.tomselect) {
+        abilitySelect.tomselect.destroy();
+    }
+    abilitySelect.innerHTML = '';
+
+    if (data.a1) {
+        const option = document.createElement('option');
+        option.value = data.a1;
+        option.text = getAbilityName(data.a1);
+        abilitySelect.appendChild(option);
+    }
+    if (data.ha) {
+        const option = document.createElement('option');
+        option.value = data.ha;
+        option.text = getAbilityName(data.ha);
+        abilitySelect.appendChild(option);
+    }
+
+    new TomSelect(`#${elementId}`);
+
     const abilitySelect = document.getElementById(elementId);
     abilitySelect.innerHTML = '';
     if (data.a1) {
