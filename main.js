@@ -1,4 +1,27 @@
 
+
+window.typeColors = {
+  Normal: '#A8A77A',
+  Fire: '#EE8130',
+  Water: '#6390F0',
+  Electric: '#F7D02C',
+  Grass: '#7AC74C',
+  Ice: '#96D9D6',
+  Fighting: '#C22E28',
+  Poison: '#A33EA1',
+  Ground: '#E2BF65',
+  Flying: '#A98FF3',
+  Psychic: '#F95587',
+  Bug: '#A6B91A',
+  Rock: '#B6A136',
+  Ghost: '#735797',
+  Dragon: '#6F35FC',
+  Dark: '#705746',
+  Steel: '#B7B7CE',
+  Fairy: '#D685AD'
+};
+
+
 const natures = [
     "Adamant", "Bashful", "Bold", "Brave", "Calm", "Careful", "Docile", "Gentle",
     "Hardy", "Hasty", "Impish", "Jolly", "Lax", "Lonely", "Mild", "Modest", "Naive",
@@ -54,7 +77,12 @@ function updateBaseInfo() {
     if (!baseData) return;
 
     document.getElementById('baseImageContainer').innerHTML = `<img src="images/${baseData.img}_0.png" alt="${getNameFromId(baseData.dex)}" class="fusion-img">`;
-    document.getElementById('baseTyping').innerText = `${getTypeName(baseData.t1)}` + (baseData.t2 !== undefined ? ` / ${getTypeName(baseData.t2)}` : '');
+    
+const baseTypingEl = document.getElementById('baseTyping');
+baseTypingEl.innerText = `${getTypeName(baseData.t1)}` + (baseData.t2 !== undefined ? ` / ${getTypeName(baseData.t2)}` : '');
+const basePrimaryColor = window.typeColors?.[getTypeName(baseData.t1)] || '#777';
+baseTypingEl.style.backgroundColor = basePrimaryColor;
+
     document.getElementById('baseHP').innerText = baseData.hp;
     document.getElementById('baseAtk').innerText = baseData.atk;
     document.getElementById('baseSpAtk').innerText = baseData.spa;
@@ -72,7 +100,12 @@ function updateSecondaryInfo() {
     if (!secondaryData) return;
 
     document.getElementById('secondaryImageContainer').innerHTML = `<img src="images/${secondaryData.img}_0.png" alt="${getNameFromId(secondaryData.dex)}" class="fusion-img">`;
-    document.getElementById('secondaryTyping').innerText = `${getTypeName(secondaryData.t1)}` + (secondaryData.t2 !== undefined ? ` / ${getTypeName(secondaryData.t2)}` : '');
+    
+const secondaryTypingEl = document.getElementById('secondaryTyping');
+secondaryTypingEl.innerText = `${getTypeName(secondaryData.t1)}` + (secondaryData.t2 !== undefined ? ` / ${getTypeName(secondaryData.t2)}` : '');
+const secondaryPrimaryColor = window.typeColors?.[getTypeName(secondaryData.t1)] || '#777';
+secondaryTypingEl.style.backgroundColor = secondaryPrimaryColor;
+
     document.getElementById('secondaryHP').innerText = secondaryData.hp;
     document.getElementById('secondaryAtk').innerText = secondaryData.atk;
     document.getElementById('secondarySpAtk').innerText = secondaryData.spa;
