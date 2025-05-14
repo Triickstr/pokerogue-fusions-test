@@ -53,6 +53,9 @@ function updateBaseInfo() {
     const baseData = items.find(p => p.row == selectedId);
     if (!baseData) return;
 
+    populateAbilities('baseAbility', baseData);
+    document.getElementById('basePassive').innerText = getAbilityName(baseData.pa);
+
     document.getElementById('baseImageContainer').innerHTML = `<img src="images/${baseData.img}_0.png" alt="${getNameFromId(baseData.dex)}" class="fusion-img">`;
     document.getElementById('baseTyping').innerText = `${getTypeName(baseData.t1)}` + (baseData.t2 !== undefined ? ` / ${getTypeName(baseData.t2)}` : '');
     document.getElementById('baseHP').innerText = baseData.hp;
@@ -70,6 +73,9 @@ function updateSecondaryInfo() {
     const selectedId = document.getElementById('secondarySelect').value;
     const secondaryData = items.find(p => p.row == selectedId);
     if (!secondaryData) return;
+
+    populateAbilities('secondaryAbility', secondaryData);
+    document.getElementById('secondaryPassive').innerText = getAbilityName(secondaryData.pa);
 
     document.getElementById('secondaryImageContainer').innerHTML = `<img src="images/${secondaryData.img}_0.png" alt="${getNameFromId(secondaryData.dex)}" class="fusion-img">`;
     document.getElementById('secondaryTyping').innerText = `${getTypeName(secondaryData.t1)}` + (secondaryData.t2 !== undefined ? ` / ${getTypeName(secondaryData.t2)}` : '');
