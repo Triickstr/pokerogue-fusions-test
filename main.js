@@ -85,11 +85,30 @@ function updateSecondaryInfo() {
 }
 
 
+
 function populateAbilities(elementId, data) {
     const abilitySelect = document.getElementById(elementId);
     if (abilitySelect.tomselect) {
         abilitySelect.tomselect.destroy();
     }
+    abilitySelect.innerHTML = '';
+
+    if (data.a1) {
+        const option = document.createElement('option');
+        option.value = data.a1;
+        option.text = getAbilityName(data.a1);
+        abilitySelect.appendChild(option);
+    }
+    if (data.ha) {
+        const option = document.createElement('option');
+        option.value = data.ha;
+        option.text = getAbilityName(data.ha);
+        abilitySelect.appendChild(option);
+    }
+
+    new TomSelect(`#${elementId}`);
+}
+
     abilitySelect.innerHTML = '';
 
     if (data.a1) {
