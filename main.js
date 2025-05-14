@@ -51,6 +51,7 @@ document.addEventListener("DOMContentLoaded", () => {
             typingContainer.appendChild(box);
         });
 
+        // Dynamically update ability and nature dropdowns after selection
         updateAbilities(prefix, pokemon);
         updateNature(prefix);
     };
@@ -82,8 +83,11 @@ document.addEventListener("DOMContentLoaded", () => {
             fusedTyping.appendChild(box);
         });
 
+        // Fusion ability: pulled from secondary Pokémon
         document.getElementById("fusedAbility").textContent = fidToName?.[secPoke.a1] || "—";
+        // Passive pulled from base Pokémon
         document.getElementById("fusedPassive").textContent = fidToName?.[basePoke.pa] || "—";
+        // Nature pulled from base Pokémon selection
         document.getElementById("fusedNature").textContent = document.getElementById("baseNature").value || "—";
     };
 
