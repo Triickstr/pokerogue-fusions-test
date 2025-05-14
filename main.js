@@ -105,24 +105,7 @@ function populateAbilities(elementId, data) {
         abilitySelect.appendChild(option);
     }
 
-    setTimeout(() => new TomSelect(`#${elementId}`), 0);
-}
-    abilitySelect.innerHTML = '';
-
-    if (data.a1) {
-        const option = document.createElement('option');
-        option.value = data.a1;
-        option.text = getAbilityName(data.a1);
-        abilitySelect.appendChild(option);
-    }
-    if (data.ha) {
-        const option = document.createElement('option');
-        option.value = data.ha;
-        option.text = getAbilityName(data.ha);
-        abilitySelect.appendChild(option);
-    }
-
-    setTimeout(() => new TomSelect(`#${elementId}`), 0);
+    setTimeout(() => { new TomSelect(`#${elementId}`); }, 0);
 }
 
     if (data.ha) {
