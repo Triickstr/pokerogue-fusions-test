@@ -6,7 +6,7 @@ const natures = [
 ];
 
 function getNameFromId(id) {
-    return speciesNames?.[id] || `#${id}`;
+    return speciesNames?.[id] || "Unknown";
 }
 
 function getTypeName(id) {
@@ -26,7 +26,7 @@ function initDropdowns() {
     items.forEach(pokemon => {
         const option = document.createElement('option');
         option.value = pokemon.row;
-        option.text = getNameFromId(pokemon.row);
+        option.text = getNameFromId(pokemon.dex);
         baseSelect.appendChild(option.cloneNode(true));
         secondarySelect.appendChild(option.cloneNode(true));
     });
@@ -39,10 +39,10 @@ function initDropdowns() {
         secondaryNature.appendChild(option.cloneNode(true));
     });
 
-    new TomSelect('#baseSelect', { onChange: () => updateBaseInfo() });
-    new TomSelect('#secondarySelect', { onChange: () => updateSecondaryInfo() });
-    new TomSelect('#baseNature');
-    new TomSelect('#secondaryNature');
+    
+    
+    
+    
 
     baseSelect.addEventListener('change', updateBaseInfo);
     secondarySelect.addEventListener('change', updateSecondaryInfo);
@@ -53,7 +53,7 @@ function updateBaseInfo() {
     const baseData = items.find(p => p.row == selectedId);
     if (!baseData) return;
 
-    document.getElementById('baseImageContainer').innerHTML = `<img src="images/${baseData.img}_0.png" alt="${getNameFromId(baseData.dex)}" class="fusion-img">`;
+    document.getElementById('baseImageContainer').innerHTML = `<img src="images/${baseData.img}.png" alt="${getNameFromId(baseData.dex)}" class="fusion-img">`;
     document.getElementById('baseTyping').innerText = `${getTypeName(baseData.t1)}` + (baseData.t2 !== undefined ? ` / ${getTypeName(baseData.t2)}` : '');
     document.getElementById('baseHP').innerText = baseData.hp;
     document.getElementById('baseAtk').innerText = baseData.atk;
@@ -71,7 +71,7 @@ function updateSecondaryInfo() {
     const secondaryData = items.find(p => p.row == selectedId);
     if (!secondaryData) return;
 
-    document.getElementById('secondaryImageContainer').innerHTML = `<img src="images/${secondaryData.img}_0.png" alt="${getNameFromId(secondaryData.dex)}" class="fusion-img">`;
+    document.getElementById('secondaryImageContainer').innerHTML = `<img src="images/${secondaryData.img}.png" alt="${getNameFromId(secondaryData.dex)}" class="fusion-img">`;
     document.getElementById('secondaryTyping').innerText = `${getTypeName(secondaryData.t1)}` + (secondaryData.t2 !== undefined ? ` / ${getTypeName(secondaryData.t2)}` : '');
     document.getElementById('secondaryHP').innerText = secondaryData.hp;
     document.getElementById('secondaryAtk').innerText = secondaryData.atk;
@@ -83,7 +83,6 @@ function updateSecondaryInfo() {
     populateAbilities('secondaryAbility', secondaryData);
     updateFusionInfo();
 }
-
 
 
 function populateAbilities(elementId, data) {
@@ -106,34 +105,9 @@ function populateAbilities(elementId, data) {
         abilitySelect.appendChild(option);
     }
 
-    new TomSelect(`#${elementId}`);
+    setTimeout(() => new TomSelect(`#${elementId}`), 0);
 }
 
-    abilitySelect.innerHTML = '';
-
-    if (data.a1) {
-        const option = document.createElement('option');
-        option.value = data.a1;
-        option.text = getAbilityName(data.a1);
-        abilitySelect.appendChild(option);
-    }
-    if (data.ha) {
-        const option = document.createElement('option');
-        option.value = data.ha;
-        option.text = getAbilityName(data.ha);
-        abilitySelect.appendChild(option);
-    }
-
-    new TomSelect(`#${elementId}`);
-
-    const abilitySelect = document.getElementById(elementId);
-    abilitySelect.innerHTML = '';
-    if (data.a1) {
-        const option = document.createElement('option');
-        option.value = data.a1;
-        option.text = getAbilityName(data.a1);
-        abilitySelect.appendChild(option);
-    }
     if (data.ha) {
         const option = document.createElement('option');
         option.value = data.ha;
@@ -153,8 +127,8 @@ function updateFusionInfo() {
 
     const avg = (a, b) => Math.round((a + b) / 2);
 
-    document.getElementById('fusedBaseImg').src = `images/${baseData.img}_0.png`;
-    document.getElementById('fusedSecondaryImg').src = `images/${secondaryData.img}_0.png`;
+    document.getElementById('fusedBaseImg').src = `images/${baseData.img}.png`;
+    document.getElementById('fusedSecondaryImg').src = `images/${secondaryData.img}.png`;
 
     document.getElementById('fusedHP').innerText = avg(baseData.hp, secondaryData.hp);
     document.getElementById('fusedAtk').innerText = avg(baseData.atk, secondaryData.atk);
