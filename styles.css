@@ -1,29 +1,33 @@
 
 body {
-    background-color: #2e2e2e;
+    background-color: #36454F;
     font-family: 'Arial', sans-serif;
     color: white;
+    padding: 20px;
 }
 
 .bg-base {
-    border: 2px dashed #3b82f6;
+    border: 2px dashed #191970;
     padding: 20px;
     border-radius: 1rem;
     background-color: #1e293b;
+    color: #9EB9D4;
 }
 
 .bg-secondary {
-    border: 2px dashed #ef4444;
+    border: 2px dashed #841617;
     padding: 20px;
     border-radius: 1rem;
     background-color: #1e293b;
+    color: #CD5C5C;
 }
 
 .bg-fusion {
-    border: 2px dashed #a855f7;
+    border: 2px dashed #32174D;
     padding: 20px;
     border-radius: 1rem;
     background-color: #1e293b;
+    color: #C9A0DC;
 }
 
 .pokemon-img {
@@ -32,8 +36,8 @@ body {
 }
 
 select {
-    background-color: #374151;
-    color: white;
+    background-color: #F0EAD6;
+    color: black;
     padding: 10px;
     width: 100%;
     border-radius: 0.5rem;
@@ -42,4 +46,10 @@ select {
 
 .option-placeholder {
     color: #9ca3af;
+}
+
+.passive-ability {
+    color: #F0EAD6;
+    text-align: center;
+    margin-top: 10px;
 }
