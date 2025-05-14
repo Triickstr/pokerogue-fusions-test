@@ -103,7 +103,6 @@ function populateAbilities(elementId, data) {
 }
 
     new TomSelect(`#${elementId}`);
-}
 
 function updateFusionInfo() {
     const baseId = document.getElementById('baseSelect').value;
