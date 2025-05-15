@@ -18,6 +18,11 @@ body {
     justify-content: center;
     align-items: center; /* Center content horizontally */
 }
+.pokemon-container {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+}
 
 .pokemon-box {
     width: 300px;
