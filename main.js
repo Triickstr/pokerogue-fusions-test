@@ -313,19 +313,33 @@ function displayMultipliers(multipliers) {
         "4": "quadruple-weak-types"
     };
 
-    // Clear previous results
+    // Clear previous results and ensure span exists
     Object.values(multiplierGroups).forEach(id => {
-        document.getElementById(id).querySelector('span').innerText = '';
+        const container = document.getElementById(id);
+        if (container) {
+            let span = container.querySelector('span');
+            if (!span) {
+                span = document.createElement('span');
+                container.appendChild(span);
+            }
+            span.innerText = '';
+        }
     });
 
     // Group and display results
-Object.entries(multipliers).forEach(([type, value]) => {
-    const groupId = multiplierGroups[value.toString()];
-    if (groupId) {
-        const span = document.getElementById(groupId).querySelector('span');
-        const displayType = type.charAt(0).toUpperCase() + type.slice(1).toLowerCase();
-        span.innerText += `${displayType} `;
-    }
-});
+    Object.entries(multipliers).forEach(([type, value]) => {
+        const groupId = multiplierGroups[value.toString()];
+        const container = document.getElementById(groupId);
+        if (container) {
+            let span = container.querySelector('span');
+            if (!span) {
+                span = document.createElement('span');
+                container.appendChild(span);
+            }
+            const displayType = type.charAt(0).toUpperCase() + type.slice(1).toLowerCase();
+            span.innerText += `${displayType} `;
+        }
+    });
 }
+
 
