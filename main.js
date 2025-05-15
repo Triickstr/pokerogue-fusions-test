@@ -233,3 +233,61 @@ function determineSecondaryType(base, secondary) {
 
 
 document.addEventListener('DOMContentLoaded', initDropdowns);
+
+function calculateEffectiveness(fusionTypes, ability) {
+    const typeChart = window.TypeChart;
+    const abilityChart = window.AbilityChart;
+    const allTypes = Object.keys(typeChart);
+
+    const multipliers = {};
+
+    allTypes.forEach(attackingType => {
+        let multiplier = 1;
+
+        fusionTypes.forEach(defType => {
+            const defChart = typeChart[defType];
+            if (defChart) {
+                for (const [mult, types] of Object.entries(defChart)) {
+                    if (types.includes(attackingType)) {
+                        multiplier *= parseFloat(mult);
+                    }
+                }
+            }
+        });
+
+        if (abilityChart[ability]) {
+            for (const [mult, types] of Object.entries(abilityChart[ability])) {
+                if (types.includes(attackingType)) {
+                    multiplier = parseFloat(mult);
+                }
+            }
+        }
+
+        multipliers[attackingType] = multiplier;
+    });
+
+    if (ability === "Delta Stream" && fusionTypes.includes("Flying")) {
+        Object.keys(multipliers).forEach(type => {
+            if (multipliers[type] === 2 || multipliers[type] === 4) {
+                multipliers[type] = 1;
+            }
+        });
+    }
+
+    if (ability === "Wonder Guard") {
+        Object.keys(multipliers).forEach(type => {
+            if (multipliers[type] < 2) {
+                multipliers[type] = 0;
+            }
+        });
+    }
+
+    if (["Filter", "Solid Rock", "Prism Armor"].includes(ability)) {
+        Object.keys(multipliers).forEach(type => {
+            if (multipliers[type] === 2) multipliers[type] = 1.5;
+            if (multipliers[type] === 4) multipliers[type] = 3;
+        });
+    }
+
+    return multipliers;
+}
