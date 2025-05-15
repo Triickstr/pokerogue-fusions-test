@@ -283,17 +283,19 @@ allTypes.forEach(attackingType => {
 });
 
 if (ability === "Delta Stream" && fusionTypes.includes("Flying")) {
+    const affectedTypes = ["Rock", "Electric", "Ice"];
     Object.keys(multipliers).forEach(type => {
-        const currentMultiplier = multipliers[type];
-        // Reduce by one tier
-        if (currentMultiplier === 4) {
-            multipliers[type] = 2;
-        } else if (currentMultiplier === 2) {
-            multipliers[type] = 1;
-        } else if (currentMultiplier === 1) {
-            multipliers[type] = 0.5;
-        } else if (currentMultiplier === 0.5) {
-            multipliers[type] = 0.25;
+        if (affectedTypes.includes(type)) {
+            const currentMultiplier = multipliers[type];
+            if (currentMultiplier === 4) {
+                multipliers[type] = 2;
+            } else if (currentMultiplier === 2) {
+                multipliers[type] = 1;
+            } else if (currentMultiplier === 1) {
+                multipliers[type] = 0.5;
+            } else if (currentMultiplier === 0.5) {
+                multipliers[type] = 0.25;
+            }
         }
     });
 }
