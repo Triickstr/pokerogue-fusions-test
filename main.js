@@ -180,6 +180,9 @@ function updateFusionInfo() {
     const baseData = items.find(p => p.row == baseId);
     const secondaryData = items.find(p => p.row == secondaryId);
 
+    console.log("Base Pokémon Row:", baseData.row, "Name:", getNameFromId(baseData.row));
+    console.log("Secondary Pokémon Row:", secondaryData.row, "Name:", getNameFromId(secondaryData.row));
+
     const avg = (a, b) => Math.round((a + b) / 2);
 
     document.getElementById('fusedBaseImg').src = `images/${baseData.img}_0.png`;
