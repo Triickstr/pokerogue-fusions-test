@@ -300,8 +300,8 @@ allTypes.forEach(attackingType => {
 
     if (["Filter", "Solid Rock", "Prism Armor"].includes(ability)) {
         Object.keys(multipliers).forEach(type => {
-            if (multipliers[type] === 2) multipliers[type] = 1.5;
-            if (multipliers[type] === 4) multipliers[type] = 3;
+            if (multipliers[type] === 2) multipliers[type] = 1;
+            if (multipliers[type] === 4) multipliers[type] = 2;
         });
     }
 
