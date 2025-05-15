@@ -186,45 +186,44 @@ function updateFusionInfo() {
     document.getElementById('fusedDef').innerText = avg(baseData.def, secondaryData.def);
     document.getElementById('fusedSpDef').innerText = avg(baseData.spd, secondaryData.spd);
     document.getElementById('fusedSpe').innerText = avg(baseData.spe, secondaryData.spe);
-    
-    if (getTypeName(baseData.fid) === 'Shedinja' || getTypeName(secondaryData.fid) === 'Shedinja') {
+
+    // Dynamically find Shedinja's row value and check
+    const shedinjaRow = items.find(p => getTypeName(p.fid) === 'Shedinja')?.row;
+    if (baseData.row == shedinjaRow || secondaryData.row == shedinjaRow) {
         document.getElementById('fusedHP').innerText = 1;
     }
-    
+
     document.getElementById('fusedAbility').innerText = getAbilityName(secondaryData.a1);
     document.getElementById('fusedPassive').innerText = getAbilityName(baseData.pa);
     document.getElementById('fusedNature').innerText = document.getElementById('baseNature').value;
 
-    
+    const fusionAbility = document.getElementById('secondaryAbility')?.value;
+    document.getElementById('fusedAbility').innerText = getAbilityName(fusionAbility);
 
-const fusionAbility = document.getElementById('secondaryAbility')?.value;
-document.getElementById('fusedAbility').innerText = getAbilityName(fusionAbility);
+    const fusionNature = document.getElementById('baseNature')?.value;
+    document.getElementById('fusedNature').innerText = fusionNature;
 
-const fusionNature = document.getElementById('baseNature')?.value;
-document.getElementById('fusedNature').innerText = fusionNature;
+    const fusedTypingEl = document.getElementById('fusedTyping');
+    fusedTypingEl.innerHTML = '';
+    const fusionPrimaryType = getTypeName(baseData.t1);
+    const fusionSecondaryType = determineSecondaryType(baseData, secondaryData);
+    [fusionPrimaryType, fusionSecondaryType].forEach(typeName => {
+        if (typeName) {
+            const span = document.createElement('span');
+            span.textContent = typeName;
+            span.style.backgroundColor = window.typeColors?.[typeName] || '#777';
+            fusedTypingEl.appendChild(span);
+        }
+    });
 
-const fusedTypingEl = document.getElementById('fusedTyping');
-fusedTypingEl.innerHTML = '';
-const fusionPrimaryType = getTypeName(baseData.t1);
-const fusionSecondaryType = determineSecondaryType(baseData, secondaryData);
-[fusionPrimaryType, fusionSecondaryType].forEach(typeName => {
-    if (typeName) { // Skip nulls to avoid duplicate typings
-        const span = document.createElement('span');
-        span.textContent = typeName;
-        span.style.backgroundColor = window.typeColors?.[typeName] || '#777';
-        fusedTypingEl.appendChild(span);
-    }
-});
+    const fusionTypes = [getTypeName(baseData.t1)];
+    const secondaryType = determineSecondaryType(baseData, secondaryData);
+    if (secondaryType) fusionTypes.push(secondaryType);
 
-const fusionTypes = [getTypeName(baseData.t1)];
-const secondaryType = determineSecondaryType(baseData, secondaryData);
-if (secondaryType) fusionTypes.push(secondaryType);
+    const selectedAbility = getAbilityName(document.getElementById('secondaryAbility')?.value);
+    const multipliers = calculateEffectiveness(fusionTypes, selectedAbility);
 
-const selectedAbility = getAbilityName(document.getElementById('secondaryAbility')?.value);
-const multipliers = calculateEffectiveness(fusionTypes, selectedAbility);
-
-displayMultipliers(multipliers);
-
+    displayMultipliers(multipliers);
 }
 
 
