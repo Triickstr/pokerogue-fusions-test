@@ -251,30 +251,31 @@ function calculateEffectiveness(fusionTypes, ability) {
 
     const multipliers = {};
 
-    allTypes.forEach(attackingType => {
-        let multiplier = 1;
+allTypes.forEach(attackingType => {
+    const normalizedAttackingType = attackingType.charAt(0).toUpperCase() + attackingType.slice(1).toLowerCase();
+    let multiplier = 1;
 
-        fusionTypes.forEach(defType => {
-            const defChart = typeChart[defType];
-            if (defChart) {
-                for (const [mult, types] of Object.entries(defChart)) {
-                    if (types.includes(attackingType)) {
-                        multiplier *= parseFloat(mult);
-                    }
-                }
-            }
-        });
-
-        if (abilityChart[ability]) {
-            for (const [mult, types] of Object.entries(abilityChart[ability])) {
-                if (types.includes(attackingType)) {
-                    multiplier = parseFloat(mult);
+    fusionTypes.forEach(defType => {
+        const defChart = typeChart[defType];
+        if (defChart) {
+            for (const [mult, types] of Object.entries(defChart)) {
+                if (types.includes(normalizedAttackingType)) {
+                    multiplier *= parseFloat(mult);
                 }
             }
         }
-
-        multipliers[attackingType] = multiplier;
     });
+
+    if (abilityChart[ability]) {
+        for (const [mult, types] of Object.entries(abilityChart[ability])) {
+            if (types.includes(normalizedAttackingType)) {
+                multiplier = parseFloat(mult);
+            }
+        }
+    }
+
+    multipliers[normalizedAttackingType] = multiplier;
+});
 
     if (ability === "Delta Stream" && fusionTypes.includes("Flying")) {
         Object.keys(multipliers).forEach(type => {
@@ -318,12 +319,13 @@ function displayMultipliers(multipliers) {
     });
 
     // Group and display results
-    Object.entries(multipliers).forEach(([type, value]) => {
-        const groupId = multiplierGroups[value.toString()];
-        if (groupId) {
-            const span = document.getElementById(groupId).querySelector('span');
-            span.innerText += `${type} `;
-        }
-    });
+Object.entries(multipliers).forEach(([type, value]) => {
+    const groupId = multiplierGroups[value.toString()];
+    if (groupId) {
+        const span = document.getElementById(groupId).querySelector('span');
+        const displayType = type.charAt(0).toUpperCase() + type.slice(1).toLowerCase();
+        span.innerText += `${displayType} `;
+    }
+});
 }
 
