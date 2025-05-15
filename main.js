@@ -146,19 +146,24 @@ function populateAbilities(elementId, data) {
 
     abilitySelect.innerHTML = '';
 
-    if (data.a1) {
-        const option = document.createElement('option');
-        option.value = data.a1;
-        option.text = getAbilityName(data.a1);
-        abilitySelect.appendChild(option);
-    }
-    if (data.ha) {
-        const option = document.createElement('option');
-        option.value = data.ha;
-        option.text = getAbilityName(data.ha);
-        abilitySelect.appendChild(option);
-    }
+    // Dynamically collect all defined abilities (including a1, a2, a3, ha, etc.)
+    const abilities = [data.a1, data.a2, data.a3, data.ha].filter(Boolean);
 
+    // Add a default placeholder option
+    const defaultOption = document.createElement('option');
+    defaultOption.value = '';
+    defaultOption.text = 'Select an Ability';
+    abilitySelect.appendChild(defaultOption);
+
+    // Populate the dropdown with all available abilities
+    abilities.forEach(abilityId => {
+        const option = document.createElement('option');
+        option.value = abilityId;
+        option.text = getAbilityName(abilityId);
+        abilitySelect.appendChild(option);
+    });
+
+    // Re-initialize TomSelect
     new TomSelect(`#${elementId}`);
 }
 
