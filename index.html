@@ -10,6 +10,20 @@
     <script src="https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js"></script>
     <script src="en.js"></script>
     <script src="pokedex_data.js"></script>
+    <script>
+    async function loadCharts() {
+        const [typeResponse, abilityResponse] = await Promise.all([
+            fetch('TypeChart.json'),
+            fetch('AbilityChart.json')
+        ]);
+
+        window.TypeChart = await typeResponse.json();
+        window.AbilityChart = await abilityResponse.json();
+    }
+
+    // Load charts before anything else runs
+    loadCharts();
+    </script>
     <script src="main.js" defer></script>
 </head>
 <body>
