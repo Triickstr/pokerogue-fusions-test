@@ -93,3 +93,40 @@ select {
     font-weight: bold;
     text-align: center;
 }
+
+#damage-multipliers {
+    margin-top: 50px;
+    text-align: center;
+}
+
+.multiplier-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 15px;
+    justify-content: center;
+    align-items: start;
+    margin-top: 20px;
+}
+
+.multiplier-box {
+    border: 2px dashed white;
+    padding: 15px;
+    border-radius: 10px;
+    color: white;
+    min-height: 100px;
+}
+
+.type-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 5px;
+    margin-top: 10px;
+}
+
+.type-list span {
+    padding: 5px 10px;
+    border-radius: 8px;
+    color: white;
+    font-weight: bold;
+}
