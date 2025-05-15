@@ -188,7 +188,8 @@ function updateFusionInfo() {
     document.getElementById('fusedSpe').innerText = avg(baseData.spe, secondaryData.spe);
 
     // Dynamically find Shedinja's row value and check
-    const shedinjaRow = items.find(p => getTypeName(p.fid) === 'Shedinja')?.row;
+    console.log("Checking fid values for Shedinja:", items.map(p => ({ row: p.row, fid: p.fid, name: getTypeName(p.fid) })));
+    const shedinjaRow = items.find(p => p.name === 'Shedinja')?.row;
     if (baseData.row == shedinjaRow || secondaryData.row == shedinjaRow) {
         document.getElementById('fusedHP').innerText = 1;
     }
