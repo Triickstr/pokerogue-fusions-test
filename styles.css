@@ -13,9 +13,10 @@ body {
 
 .container {
     display: flex;
+    flex-direction: column; /* Add this line to stack vertically */
     gap: 20px;
     justify-content: center;
-    align-items: flex-start;
+    align-items: center; /* Center content horizontally */
 }
 
 .pokemon-box {
