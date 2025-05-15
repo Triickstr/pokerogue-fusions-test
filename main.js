@@ -283,21 +283,16 @@ allTypes.forEach(attackingType => {
 });
 
 if (ability === "Delta Stream" && fusionTypes.includes("Flying")) {
-    const affectedTypes = ["Rock", "Electric", "Ice"];
-    Object.keys(multipliers).forEach(type => {
-        if (affectedTypes.includes(type)) {
-            const currentMultiplier = multipliers[type];
-            if (currentMultiplier === 4) {
-                multipliers[type] = 2;
-            } else if (currentMultiplier === 2) {
-                multipliers[type] = 1;
-            } else if (currentMultiplier === 1) {
-                multipliers[type] = 0.5;
-            } else if (currentMultiplier === 0.5) {
-                multipliers[type] = 0.25;
-            }
-        }
-    });
+    applyDeltaStream(multipliers);
+} else if (["Filter", "Solid Rock", "Prism Armor"].includes(ability)) {
+    applyDefensiveReduction(multipliers);
+}
+
+// Then apply the passive ability if it's one of the special cases
+if (passiveAbility === "Delta Stream" && fusionTypes.includes("Flying")) {
+    applyDeltaStream(multipliers);
+} else if (["Filter", "Solid Rock", "Prism Armor"].includes(passiveAbility)) {
+    applyDefensiveReduction(multipliers);
 }
 
     if (ability === "Wonder Guard") {
@@ -307,15 +302,29 @@ if (ability === "Delta Stream" && fusionTypes.includes("Flying")) {
             }
         });
     }
-
-    if (["Filter", "Solid Rock", "Prism Armor"].includes(ability)) {
-        Object.keys(multipliers).forEach(type => {
-            if (multipliers[type] === 2) multipliers[type] = 1.5;
-            if (multipliers[type] === 4) multipliers[type] = 3;
-        });
-    }
-
     return multipliers;
+}
+
+function applyDeltaStream(multipliers) {
+    const affectedTypes = ["Rock", "Electric", "Ice"];
+    Object.keys(multipliers).forEach(type => {
+        if (affectedTypes.includes(type)) {
+            let current = multipliers[type];
+            if (current === 4) current = 2;
+            else if (current === 2) current = 1;
+            else if (current === 1) current = 0.5;
+            else if (current === 0.5) current = 0.25;
+            multipliers[type] = current;
+        }
+    });
+}
+
+function applyDefensiveReduction(multipliers) {
+    Object.keys(multipliers).forEach(type => {
+        const current = multipliers[type];
+        if (current === 4) multipliers[type] = 3;
+        else if (current === 2) multipliers[type] = 1.5;
+    });
 }
 
 function displayMultipliers(multipliers) {
