@@ -310,8 +310,8 @@ if (ability === "Delta Stream" && fusionTypes.includes("Flying")) {
 
     if (["Filter", "Solid Rock", "Prism Armor"].includes(ability)) {
         Object.keys(multipliers).forEach(type => {
-            if (multipliers[type] === 2) multipliers[type] = 1;
-            if (multipliers[type] === 4) multipliers[type] = 2;
+            if (multipliers[type] === 2) multipliers[type] = 1.5;
+            if (multipliers[type] === 4) multipliers[type] = 3;
         });
     }
 
@@ -320,12 +320,14 @@ if (ability === "Delta Stream" && fusionTypes.includes("Flying")) {
 
 function displayMultipliers(multipliers) {
     const multiplierGroups = {
-        "0": "immune-types",
-        "0.25": "quarter-resist-types",
-        "0.5": "half-resist-types",
-        "1": "neutral-types",
-        "2": "double-weak-types",
-        "4": "quadruple-weak-types"
+    "0": "immune-types",
+    "0.25": "quarter-resist-types",
+    "0.5": "half-resist-types",
+    "1": "neutral-types",
+    "1.5": "one-half-weak-types",
+    "2": "double-weak-types",
+    "3": "triple-weak-types",
+    "4": "quadruple-weak-types"
     };
 
     // Clear previous results and ensure span exists
