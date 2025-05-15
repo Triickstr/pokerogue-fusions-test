@@ -95,6 +95,8 @@ select {
 }
 
 #damage-multipliers {
+    grid-column: 1 / -1;
+    width: 100%;
     margin-top: 50px;
     text-align: center;
 }
