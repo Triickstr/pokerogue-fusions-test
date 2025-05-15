@@ -106,6 +106,7 @@ baseTypes.forEach(typeId => {
 
 }
 
+
 function updateSecondaryInfo() {
     const selectedId = document.getElementById('secondarySelect').value;
     const secondaryData = items.find(p => p.row == selectedId);
@@ -167,6 +168,10 @@ function populateAbilities(elementId, data) {
     new TomSelect(`#${elementId}`);
 }
 
+
+function getRowFromName(name) {
+    return Object.keys(fidToName).find(key => fidToName[key] === name);
+}
 function updateFusionInfo() {
     const baseId = document.getElementById('baseSelect').value;
     const secondaryId = document.getElementById('secondarySelect').value;
@@ -188,8 +193,7 @@ function updateFusionInfo() {
     document.getElementById('fusedSpe').innerText = avg(baseData.spe, secondaryData.spe);
 
     // Dynamically find Shedinja's row value and check
-    console.log("Checking fid values for Shedinja:", items.map(p => ({ row: p.row, fid: p.fid, name: getTypeName(p.fid) })));
-    const shedinjaRow = items.find(p => p.name === 'Shedinja')?.row;
+    const shedinjaRow = getRowFromName('Shedinja');
     if (baseData.row == shedinjaRow || secondaryData.row == shedinjaRow) {
         document.getElementById('fusedHP').innerText = 1;
     }
