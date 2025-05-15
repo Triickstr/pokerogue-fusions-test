@@ -316,28 +316,20 @@ function displayMultipliers(multipliers) {
     // Clear previous results and ensure span exists
     Object.values(multiplierGroups).forEach(id => {
         const container = document.getElementById(id);
-        if (container) {
-            let span = container.querySelector('span');
-            if (!span) {
-                span = document.createElement('span');
-                container.appendChild(span);
-            }
-            span.innerText = '';
-        }
+        if (container) container.innerHTML = ''; // Clear entire container instead of just span
     });
 
-    // Group and display results
+    // Group and display results vertically with background colors
     Object.entries(multipliers).forEach(([type, value]) => {
         const groupId = multiplierGroups[value.toString()];
         const container = document.getElementById(groupId);
         if (container) {
-            let span = container.querySelector('span');
-            if (!span) {
-                span = document.createElement('span');
-                container.appendChild(span);
-            }
             const displayType = type.charAt(0).toUpperCase() + type.slice(1).toLowerCase();
-            span.innerText += `${displayType} `;
+            const typeElement = document.createElement('div');
+            typeElement.className = 'type-badge';
+            typeElement.innerText = displayType;
+            typeElement.style.backgroundColor = window.typeColors?.[displayType] || '#777';
+            container.appendChild(typeElement);
         }
     });
 }
