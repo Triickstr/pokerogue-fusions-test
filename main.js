@@ -103,6 +103,14 @@ baseTypes.forEach(typeId => {
     document.getElementById('basePassive').innerText = getAbilityName(baseData.pa);
     populateAbilities('baseAbility', baseData);
     updateFusionInfo();
+const fusionTypes = [getTypeName(baseData.t1)];
+const secondaryType = determineSecondaryType(baseData, secondaryData);
+if (secondaryType) fusionTypes.push(secondaryType);
+
+const selectedAbility = getAbilityName(document.getElementById('secondaryAbility')?.value);
+const multipliers = calculateEffectiveness(fusionTypes, selectedAbility);
+
+displayMultipliers(multipliers);
 }
 
 function updateSecondaryInfo() {
@@ -291,3 +299,29 @@ function calculateEffectiveness(fusionTypes, ability) {
 
     return multipliers;
 }
+
+function displayMultipliers(multipliers) {
+    const multiplierGroups = {
+        "0": "immune-types",
+        "0.25": "quarter-resist-types",
+        "0.5": "half-resist-types",
+        "1": "neutral-types",
+        "2": "double-weak-types",
+        "4": "quadruple-weak-types"
+    };
+
+    // Clear previous results
+    Object.values(multiplierGroups).forEach(id => {
+        document.getElementById(id).querySelector('span').innerText = '';
+    });
+
+    // Group and display results
+    Object.entries(multipliers).forEach(([type, value]) => {
+        const groupId = multiplierGroups[value.toString()];
+        if (groupId) {
+            const span = document.getElementById(groupId).querySelector('span');
+            span.innerText += `${type} `;
+        }
+    });
+}
+
