@@ -103,14 +103,7 @@ baseTypes.forEach(typeId => {
     document.getElementById('basePassive').innerText = getAbilityName(baseData.pa);
     populateAbilities('baseAbility', baseData);
     updateFusionInfo();
-const fusionTypes = [getTypeName(baseData.t1)];
-const secondaryType = determineSecondaryType(baseData, secondaryData);
-if (secondaryType) fusionTypes.push(secondaryType);
 
-const selectedAbility = getAbilityName(document.getElementById('secondaryAbility')?.value);
-const multipliers = calculateEffectiveness(fusionTypes, selectedAbility);
-
-displayMultipliers(multipliers);
 }
 
 function updateSecondaryInfo() {
@@ -213,6 +206,15 @@ const fusionSecondaryType = determineSecondaryType(baseData, secondaryData);
         fusedTypingEl.appendChild(span);
     }
 });
+
+const fusionTypes = [getTypeName(baseData.t1)];
+const secondaryType = determineSecondaryType(baseData, secondaryData);
+if (secondaryType) fusionTypes.push(secondaryType);
+
+const selectedAbility = getAbilityName(document.getElementById('secondaryAbility')?.value);
+const multipliers = calculateEffectiveness(fusionTypes, selectedAbility);
+
+displayMultipliers(multipliers);
 
 }
 
