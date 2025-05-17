@@ -16,19 +16,19 @@ body {
     flex-direction: column;
     gap: 20px;
     width: 100%;
-    max-width: 1200px; /* Optional to prevent overly wide layouts */
+    max-width: 1200px;
     height: 100vh;
-    overflow: hidden;
+    overflow-y: auto; /* Allow vertical scrolling for entire content */
+    padding-bottom: 50px; /* Avoid cutting off bottom content */
 }
 
 .pokemon-container {
     display: flex;
     gap: 20px;
     justify-content: center;
-    flex-wrap: wrap; /* Allows wrapping on smaller screens */
-    overflow-y: auto;
-    max-height: calc(100vh - 200px); /* Adjust this to leave space for dropdowns */
+    flex-wrap: wrap;
     padding-bottom: 20px;
+    /* Removed max-height and overflow to allow content to push down */
 }
 
 /* Sticky Dropdown Section */
