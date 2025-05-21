@@ -227,8 +227,10 @@ function updateFusionInfo() {
     const secondaryType = determineSecondaryType(baseData, secondaryData);
     if (secondaryType) fusionTypes.push(secondaryType);
 
-    const selectedAbility = getAbilityName(document.getElementById('secondaryAbility')?.value);
-    const multipliers = calculateEffectiveness(fusionTypes, selectedAbility);
+    const selectedAbilityId = document.getElementById('secondaryAbility')?.value;
+    const passiveAbilityId = baseData.pa; // this is usually already in numeric ID format
+
+    const multipliers = calculateEffectiveness(fusionTypes, selectedAbilityId, passiveAbilityId);
 
     displayMultipliers(multipliers);
 }
@@ -259,73 +261,96 @@ function determineSecondaryType(base, secondary) {
 
 document.addEventListener('DOMContentLoaded', initDropdowns);
 
-function calculateEffectiveness(fusionTypes, ability) {
+function calculateEffectiveness(fusionTypes, ability, passiveAbility) {
     const typeChart = window.TypeChart;
     const abilityChart = window.AbilityChart;
     const allTypes = Object.keys(typeChart);
-
     const multipliers = {};
 
-allTypes.forEach(attackingType => {
-    const normalizedAttackingType = attackingType.charAt(0).toUpperCase() + attackingType.slice(1).toLowerCase();
-    let multiplier = 1;
+    allTypes.forEach(attackingType => {
+        const normalizedAttackingType = attackingType.charAt(0).toUpperCase() + attackingType.slice(1).toLowerCase();
+        let multiplier = 1;
 
-    fusionTypes.forEach(defType => {
-        const defChart = typeChart[defType];
-        if (defChart) {
-            for (const [mult, types] of Object.entries(defChart)) {
-                if (types.includes(normalizedAttackingType)) {
-                    multiplier *= parseFloat(mult);
+        fusionTypes.forEach(defType => {
+            const defChart = typeChart[defType];
+            if (defChart) {
+                for (const [mult, types] of Object.entries(defChart)) {
+                    if (types.includes(normalizedAttackingType)) {
+                        multiplier *= parseFloat(mult);
+                    }
                 }
             }
-        }
+        });
+
+        // Apply standard abilities (only once per type, avoids stacking)
+        const abilityMult = getAbilityMultiplier(normalizedAttackingType, ability);
+        if (abilityMult !== null) multiplier = abilityMult;
+
+        const passiveMult = getAbilityMultiplier(normalizedAttackingType, passiveAbility);
+        if (passiveAbility !== ability && passiveMult !== null) multiplier = passiveMult;
+
+        multipliers[normalizedAttackingType] = multiplier;
     });
 
-    if (abilityChart[ability]) {
-        for (const [mult, types] of Object.entries(abilityChart[ability])) {
-            if (types.includes(normalizedAttackingType)) {
-                multiplier = parseFloat(mult);
-            }
-        }
-    }
-
-    multipliers[normalizedAttackingType] = multiplier;
-});
-
-if (ability === "Delta Stream" && fusionTypes.includes("Flying")) {
+    // Apply special logic only once per category
+    const specialDefenders = ["Filter", "Solid Rock", "Prism Armor"];
     const affectedTypes = ["Rock", "Electric", "Ice"];
-    Object.keys(multipliers).forEach(type => {
-        if (affectedTypes.includes(type)) {
-            const currentMultiplier = multipliers[type];
-            if (currentMultiplier === 4) {
-                multipliers[type] = 2;
-            } else if (currentMultiplier === 2) {
-                multipliers[type] = 1;
-            } else if (currentMultiplier === 1) {
-                multipliers[type] = 0.5;
-            } else if (currentMultiplier === 0.5) {
-                multipliers[type] = 0.25;
-            }
-        }
-    });
-}
 
-    if (ability === "Wonder Guard") {
+    const applyDeltaStream = () => {
+        Object.keys(multipliers).forEach(type => {
+            if (affectedTypes.includes(type)) {
+                const current = multipliers[type];
+                if (current === 4) multipliers[type] = 2;
+                else if (current === 2) multipliers[type] = 1;
+                else if (current === 1) multipliers[type] = 0.5;
+                else if (current === 0.5) multipliers[type] = 0.25;
+            }
+        });
+    };
+
+    const applyWonderGuard = () => {
         Object.keys(multipliers).forEach(type => {
             if (multipliers[type] < 2) {
                 multipliers[type] = 0;
             }
         });
-    }
+    };
 
-    if (["Filter", "Solid Rock", "Prism Armor"].includes(ability)) {
+    const applyDefensiveReduction = () => {
         Object.keys(multipliers).forEach(type => {
-            if (multipliers[type] === 2) multipliers[type] = 1.5;
             if (multipliers[type] === 4) multipliers[type] = 3;
+            else if (multipliers[type] === 2) multipliers[type] = 1.5;
         });
-    }
+    };
+
+    const applyTeraShell = () => {
+        Object.keys(multipliers).forEach(type => {
+            multipliers[type] = 0.5;
+        });
+    };
+
+    if (ability === "Delta Stream" && fusionTypes.includes("Flying")) applyDeltaStream();
+    if (passiveAbility === "Delta Stream" && passiveAbility !== ability && fusionTypes.includes("Flying")) applyDeltaStream();
+
+    if (ability === "Wonder Guard") applyWonderGuard();
+    if (passiveAbility === "Wonder Guard" && passiveAbility !== ability) applyWonderGuard();
+
+    if (specialDefenders.includes(ability)) applyDefensiveReduction();
+    if (specialDefenders.includes(passiveAbility) && passiveAbility !== ability) applyDefensiveReduction();
+
+    if (ability === "Tera Shell" || passiveAbility === "Tera Shell") applyTeraShell();
 
     return multipliers;
+}
+
+function getAbilityMultiplier(type, abilityName) {
+    const chart = window.AbilityChart?.[abilityName];
+    if (!chart) return null;
+
+    for (const [mult, types] of Object.entries(chart)) {
+        if (types.includes(type)) return parseFloat(mult);
+    }
+    return null;
 }
 
 function displayMultipliers(multipliers) {
