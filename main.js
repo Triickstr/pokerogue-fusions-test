@@ -283,8 +283,11 @@ function calculateEffectiveness(fusionTypes, ability, passiveAbility) {
         });
 
         // Apply standard abilities (only once per type, avoids stacking)
-      const abilityMult = getAbilityMultiplier(normalizedAttackingType, ability);
-      const passiveMult = getAbilityMultiplier(normalizedAttackingType, passiveAbility);
+      const abilityName = getAbilityName(ability);
+      const passiveName = getAbilityName(passiveAbility);
+
+      const abilityMult = getAbilityMultiplier(normalizedAttackingType, abilityName);
+      const passiveMult = getAbilityMultiplier(normalizedAttackingType, passiveName);
 
       if (abilityMult !== null && passiveMult !== null) {
           multiplier = Math.min(abilityMult, passiveMult);
