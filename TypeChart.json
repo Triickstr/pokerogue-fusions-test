@@ -90,7 +90,6 @@
             "Normal",
             "Fighting",
             "Poison",
-            "Electric",
             "Psychic",
             "Bug",
             "Rock",
@@ -99,6 +98,7 @@
             "Fairy"
         ],
         "0.5x": [
+            "Electric",
             "Flying",
             "Steel"
         ],
