@@ -127,7 +127,9 @@
         "2x": [],
         "1x": [],
         "0.5x": [
-            "ALL"
+            "Normal", "Fire", "Water", "Electric", "Grass", "Ice", "Fighting", "Poison",
+            "Ground", "Flying", "Psychic", "Bug", "Rock", "Ghost", "Dragon", "Dark",
+            "Steel", "Fairy"
         ],
         "0.25x": [],
         "0x": []
