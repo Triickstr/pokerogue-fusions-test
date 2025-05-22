@@ -331,7 +331,8 @@ function calculateEffectiveness(fusionTypes, ability, passiveAbility) {
         });
     };
 
-
+      const abilityName = getAbilityName(ability);
+      const passiveName = getAbilityName(passiveAbility);
 if (abilityName === "Delta Stream" && fusionTypes.includes("Flying")) applyDeltaStream();
 if (passiveName === "Delta Stream" && passiveName !== abilityName && fusionTypes.includes("Flying")) applyDeltaStream();
 
