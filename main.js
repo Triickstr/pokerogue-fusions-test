@@ -331,22 +331,17 @@ function calculateEffectiveness(fusionTypes, ability, passiveAbility) {
         });
     };
 
-    const applyTeraShell = () => {
-        Object.keys(multipliers).forEach(type => {
-            multipliers[type] = 0.5;
-        });
-    };
 
-    if (ability === "Delta Stream" && fusionTypes.includes("Flying")) applyDeltaStream();
-    if (passiveAbility === "Delta Stream" && passiveAbility !== ability && fusionTypes.includes("Flying")) applyDeltaStream();
+if (abilityName === "Delta Stream" && fusionTypes.includes("Flying")) applyDeltaStream();
+if (passiveName === "Delta Stream" && passiveName !== abilityName && fusionTypes.includes("Flying")) applyDeltaStream();
 
-    if (ability === "Wonder Guard") applyWonderGuard();
-    if (passiveAbility === "Wonder Guard" && passiveAbility !== ability) applyWonderGuard();
+if (abilityName === "Wonder Guard") applyWonderGuard();
+if (passiveName === "Wonder Guard" && passiveName !== abilityName) applyWonderGuard();
 
-    if (specialDefenders.includes(ability)) applyDefensiveReduction();
-    if (specialDefenders.includes(passiveAbility) && passiveAbility !== ability) applyDefensiveReduction();
+if (specialDefenders.includes(abilityName)) applyDefensiveReduction();
+if (specialDefenders.includes(passiveName) && passiveName !== abilityName) applyDefensiveReduction();
 
-    if (ability === "Tera Shell" || passiveAbility === "Tera Shell") applyTeraShell();
+
 
     return multipliers;
 }
